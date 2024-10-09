@@ -1,8 +1,13 @@
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import javax.swing.*;
 
-public class Login extends JFrame {
+public class Login extends JFrame implements ActionListener {
+
+    JTextField tfusername, tfpassword;
 
     Login() {
 
@@ -14,7 +19,7 @@ public class Login extends JFrame {
         add(lblusername);
 
         //adding text field for username
-        JTextField tfusername = new JTextField();
+        tfusername = new JTextField();
         tfusername.setBounds(150, 20, 200, 30);
         add(tfusername);
 
@@ -24,7 +29,7 @@ public class Login extends JFrame {
         add(lblpassword);
 
         //adding text field for password
-        JTextField tfpassword = new JTextField();
+        tfpassword = new JTextField();
         tfpassword.setBounds(150, 70, 200, 30);
         add(tfpassword);
 
@@ -33,6 +38,7 @@ public class Login extends JFrame {
         clickhere.setBounds(150, 140, 200, 30);
         clickhere.setBackground(Color.black);
         clickhere.setForeground(Color.white);
+        clickhere.addActionListener(this);
         add(clickhere);
 
         //addding image to login page
@@ -46,6 +52,26 @@ public class Login extends JFrame {
         setSize(600, 250);
         setLocation(450, 200);
         setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        try {
+            String username = tfusername.getText();
+            String password = tfpassword.getText();
+            conn c = new conn();
+            String query = "select * from login where username = '" + username + "' and password = '" + password + "'";
+
+            ResultSet rs = c.s.executeQuery(query);
+            if (rs.next()) {
+                setVisible(false);
+                new home();
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid Username or Password");
+                setVisible(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
